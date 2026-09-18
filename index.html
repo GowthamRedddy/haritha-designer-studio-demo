@@ -3,266 +3,279 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Haritha Designer Studio — Custom Bridal & Occasion Couture | Hyderabad</title>
-<meta name="description" content="Haritha Designer Studio — customised designer wear for men, women and kids. Bridal and festive couture, shipped worldwide. WhatsApp for orders and store appointments.">
+<title>Haritha Designer Studio — Hyderabad, Hyderabad</title>
+<meta name="description" content="Haritha Designer Studio, Hyderabad Hyderabad — demo website preview. Contact on WhatsApp.">
+<!--
+  PERMANENT MOTION STANDARD (GOWTHAM, 2026-09-18):
+  dark #09090b palette · asymmetric Bento Grid · py-24 · micro-borders ·
+  backdrop-blur glassmorphism · scroll reveals (slide up + scale + fade from blur) ·
+  3D-tilt / scale hovers · cubic-bezier(0.16,1,0.3,1) · fluid clamp() type ·
+  explicit aspect ratios (zero layout shift). React/Tailwind/Framer Motion build
+  variant: demo_react_template.jsx
+-->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/framer-motion@11/dist/framer-motion.js"></script>
+<script>
+  /* ---- Motion engine config (Framer Motion UMD, animates DOM via WAAPI) ---- */
+  const EASE = [0.16, 1, 0.3, 1];
+  document.addEventListener("DOMContentLoaded", () => {
+    const { animate, inView, stagger } = window.Motion;
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    /* scroll reveals: slide up + scale + fade from blur */
+    inView("[data-reveal]", (el) => {
+      if (reduced) return;
+      animate(el.target,
+        { opacity: [0, 1], transform: ["translateY(48px) scale(0.94)", "translateY(0px) scale(1)"], filter: ["blur(10px)", "blur(0px)"] },
+        { duration: 0.9, delay: (parseFloat(el.target.dataset.reveal) || 0), ease: EASE });
+    }, { margin: "0px 0px -12% 0px" });
+
+    /* 3D tilt hovers (pointer-fine devices only) */
+    if (matchMedia("(pointer:fine)").matches && !reduced) {
+      document.querySelectorAll("[data-tilt]").forEach((card) => {
+        card.style.transformPerspective = "900px";
+        card.addEventListener("pointermove", (e) => {
+          const r = card.getBoundingClientRect();
+          const x = (e.clientX - r.left) / r.width - 0.5;
+          const y = (e.clientY - r.top) / r.height - 0.5;
+          animate(card, { rotateX: -y * 8, rotateY: x * 8, scale: 1.02 },
+            { duration: 0.35, ease: EASE });
+        });
+        card.addEventListener("pointerleave", () => {
+          animate(card, { rotateX: 0, rotateY: 0, scale: 1 }, { duration: 0.5, ease: EASE });
+        });
+      });
+    }
+
+    /* staggered hero entrance */
+    if (!reduced) {
+      animate("[data-hero-stagger]",
+        { opacity: [0, 1], transform: ["translateY(28px)", "translateY(0)"] },
+        { duration: 0.8, delay: stagger(0.1), ease: EASE });
+    }
+  });
+</script>
 <style>
+  /* ============ DESIGN TOKENS — dark premium ============ */
   :root{
-    --ivory:#faf7f0; --emerald:#1e4d3b; --emerald-dark:#123528;
-    --champagne:#c8a24e; --champagne-soft:#eaddb8; --ink:#22301f; --muted:#6f7a6d;
+    --bg:#09090b; --bg-soft:#111113; --card:rgba(255,255,255,.04);
+    --line:rgba(255,255,255,.06); --line-strong:rgba(255,255,255,.12);
+    --ink:#fafafa; --ink-soft:#a1a1aa; --ink-faint:#71717a;
+    --accent:#e4e4e7; --wa:#22c55e; --wa-dark:#16a34a;
+    --radius:20px; --ease:cubic-bezier(0.16,1,0.3,1);
+    --font:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
+    --step--1:clamp(0.85rem,0.82rem + 0.2vw,0.95rem);
+    --step-0:clamp(0.95rem,0.92rem + 0.3vw,1.08rem);
+    --step-1:clamp(1.15rem,1.05rem + 0.6vw,1.4rem);
+    --step-2:clamp(1.5rem,1.3rem + 1.2vw,2.1rem);
+    --step-3:clamp(2.1rem,1.5rem + 3vw,3.6rem);
   }
   *{margin:0;padding:0;box-sizing:border-box}
   html{scroll-behavior:smooth}
-  body{font-family:'Manrope',sans-serif;background:var(--ivory);color:var(--ink);line-height:1.65;-webkit-font-smoothing:antialiased}
-  h1,h2,h3{font-family:'Marcellus',Georgia,serif;font-weight:400}
+  body{font-family:var(--font);font-size:var(--step-0);line-height:1.6;color:var(--ink);
+    background:var(--bg);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  img{max-width:100%;display:block}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:6px}
 
-  .demo-ribbon{position:fixed;top:14px;right:-46px;z-index:1001;background:var(--emerald-dark);color:var(--champagne-soft);
-    font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;padding:6px 50px;transform:rotate(45deg);
-    border:1px solid var(--champagne);box-shadow:0 2px 8px rgba(0,0,0,.35)}
+  /* ============ DEMO RIBBON ============ */
+  .demo-ribbon{position:sticky;top:0;z-index:50;text-align:center;
+    background:repeating-linear-gradient(45deg,#18181b,#18181b 12px,#27272a 12px,#27272a 24px);
+    color:#fde68a;font-size:.78rem;font-weight:600;letter-spacing:.08em;
+    padding:.5rem 1rem;text-transform:uppercase}
 
-  header{position:sticky;top:0;z-index:1000;background:rgba(30,77,59,.97);backdrop-filter:blur(8px);border-bottom:1px solid rgba(200,162,78,.5)}
-  .nav{max-width:1100px;margin:auto;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px}
-  .brand{display:flex;flex-direction:column;line-height:1.15}
-  .brand .name{font-family:'Marcellus',serif;font-size:1.25rem;color:var(--champagne-soft);letter-spacing:.05em}
-  .brand .tag{font-size:.6rem;letter-spacing:.3em;text-transform:uppercase;color:rgba(255,255,255,.7)}
-  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 22px;border-radius:999px;
-    text-decoration:none;font-weight:500;font-size:.95rem;transition:transform .15s ease,background .15s ease;cursor:pointer;border:none}
-  .btn:active{transform:scale(.97)}
-  .btn-wa{background:#1faa53;color:#fff;box-shadow:0 4px 14px rgba(31,170,83,.35)}
-  .btn-wa:hover{background:#178a43}
-  .btn-gold{background:var(--champagne);color:var(--emerald-dark);box-shadow:0 4px 14px rgba(200,162,78,.35)}
-  .btn-outline{border:1.5px solid var(--champagne);color:var(--champagne-soft);background:transparent}
-  .btn-outline:hover{background:rgba(200,162,78,.12)}
-  .btn-sm{padding:9px 16px;font-size:.85rem}
-  .wa-ico{width:17px;height:17px;fill:currentColor;flex:none}
+  /* ============ LAYOUT ============ */
+  .wrap{width:min(1150px,92%);margin-inline:auto}
+  section{padding:clamp(4rem,8vw,6rem) 0} /* py-24 spirit at every viewport */
 
-  .hero{position:relative;text-align:center;color:#fff;padding:86px 22px 96px;overflow:hidden;
-    background:radial-gradient(1000px 500px at 80% -10%, rgba(200,162,78,.22), transparent 60%),
-      linear-gradient(160deg, var(--emerald) 0%, var(--emerald-dark) 82%)}
-  .hero::before,.hero::after{content:"";position:absolute;left:50%;transform:translateX(-50%);width:min(540px,80%);height:1px;
-    background:linear-gradient(90deg,transparent,var(--champagne),transparent)}
-  .hero::before{top:32px}.hero::after{bottom:32px}
-  .hero .kicker{display:inline-block;font-size:.68rem;letter-spacing:.34em;text-transform:uppercase;color:var(--champagne-soft);
-    border:1px solid rgba(200,162,78,.5);padding:7px 16px;border-radius:999px;margin-bottom:26px}
-  .hero h1{font-size:clamp(2rem,6vw,3.4rem);line-height:1.18;max-width:740px;margin:0 auto 18px}
-  .hero h1 em{font-style:italic;color:var(--champagne-soft)}
-  .hero p.sub{max-width:600px;margin:0 auto 32px;color:rgba(255,255,255,.85);font-weight:300}
-  .hero .ship{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.08);border:1px solid rgba(200,162,78,.4);
-    border-radius:999px;padding:8px 18px;font-size:.82rem;margin-bottom:32px}
-  .hero-actions{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+  /* ============ HEADER ============ */
+  header.site{position:sticky;top:2.2rem;z-index:40;
+    background:rgba(9,9,11,.7);backdrop-filter:blur(16px);
+    border-bottom:1px solid var(--line)}
+  .nav{display:flex;align-items:center;justify-content:space-between;padding:1rem 0}
+  .brand{font-weight:800;font-size:var(--step-1);letter-spacing:-.02em;color:var(--ink);text-decoration:none}
+  .nav a.btn{padding:.55rem 1.15rem;font-size:.88rem}
 
-  section{padding:70px 22px}
-  .container{max-width:1100px;margin:auto}
-  .sec-head{text-align:center;margin-bottom:42px}
-  .sec-head .eyebrow{font-size:.68rem;letter-spacing:.32em;text-transform:uppercase;color:var(--champagne);font-weight:600}
-  .sec-head h2{font-size:clamp(1.6rem,4.5vw,2.3rem);color:var(--emerald);margin-top:8px}
-  .divider{width:70px;height:2px;margin:16px auto 0;background:linear-gradient(90deg,transparent,var(--champagne),transparent)}
+  /* ============ BUTTONS ============ */
+  .btn{display:inline-flex;align-items:center;gap:.55rem;background:var(--accent);
+    color:#09090b;text-decoration:none;font-weight:700;border-radius:999px;
+    padding:.85rem 1.7rem;border:1px solid var(--line-strong);
+    transition:transform .3s var(--ease),box-shadow .3s var(--ease),background .3s var(--ease)}
+  .btn:hover{transform:translateY(-2px) scale(1.03);box-shadow:0 10px 30px rgba(255,255,255,.08)}
+  .btn:active{transform:translateY(0) scale(.99)}
+  .btn.wa{background:var(--wa);color:#052e12;border-color:rgba(34,197,94,.4)}
+  .btn.wa:hover{background:var(--wa-dark);color:#f0fdf4}
+  .btn.ghost{background:rgba(255,255,255,.03);color:var(--ink);border:1px solid var(--line-strong)}
+  .btn.ghost:hover{background:rgba(255,255,255,.08)}
 
-  .about-card{background:#fff;border:1px solid #e4ddc9;border-radius:18px;padding:34px 30px;max-width:860px;
-    margin:auto;box-shadow:0 10px 30px rgba(18,53,40,.06)}
-  .about-card p{color:#3c463a;font-weight:300}
-  .about-card p+p{margin-top:14px}
-  .about-card strong{color:var(--emerald)}
-  .about-flags{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:26px}
-  .flag{background:linear-gradient(160deg,var(--emerald),var(--emerald-dark));color:#fff;border-radius:14px;padding:18px 10px;
-    text-align:center;border:1px solid rgba(200,162,78,.5)}
-  .flag .big{font-family:'Marcellus',serif;font-size:1.25rem;color:var(--champagne-soft)}
-  .flag .lbl{font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.8)}
+  /* ============ HERO ============ */
+  .hero{padding-top:clamp(4rem,9vw,7rem)}
+  .kicker{display:inline-block;background:rgba(255,255,255,.04);border:1px solid var(--line);
+    color:var(--ink-soft);font-weight:600;font-size:.8rem;letter-spacing:.14em;
+    text-transform:uppercase;border-radius:999px;padding:.4rem 1.05rem;margin-bottom:1.4rem}
+  h1{font-size:var(--step-3);line-height:1.06;letter-spacing:-.03em;font-weight:800;max-width:16ch}
+  h1 em{font-style:normal;background:linear-gradient(90deg,#fafafa 20%,#71717a);
+    -webkit-background-clip:text;background-clip:text;color:transparent}
+  p.lead{max-width:44ch;margin:1.4rem 0 2.2rem;color:var(--ink-soft);font-size:var(--step-1)}
+  .cta-row{display:flex;gap:.9rem;flex-wrap:wrap}
 
-  #services{background:#fff}
-  .svc-grid{display:grid;gap:18px;grid-template-columns:1fr}
-  .svc{border:1px solid #e4ddc9;border-radius:16px;padding:26px 24px;background:var(--ivory);transition:transform .18s ease,box-shadow .18s ease}
-  .svc:hover{transform:translateY(-4px);box-shadow:0 14px 30px rgba(18,53,40,.1)}
-  .svc .ico{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;
-    background:linear-gradient(150deg,var(--emerald),var(--emerald-dark));color:var(--champagne-soft);font-size:1.25rem;margin-bottom:14px;
-    border:1px solid rgba(200,162,78,.5)}
-  .svc h3{color:var(--emerald);font-size:1.12rem;margin-bottom:6px}
-  .svc p{font-size:.92rem;color:var(--muted);font-weight:300}
+  /* ============ BENTO GRID ============ */
+  h2.sec{font-size:var(--step-2);letter-spacing:-.02em;font-weight:700;max-width:24ch}
+  p.sec-sub{color:var(--ink-soft);margin:.7rem 0 3rem;max-width:52ch}
+  .bento{display:grid;gap:1rem;grid-template-columns:repeat(6,1fr)}
+  .tile{
+    background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+    backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+    padding:clamp(1.5rem,3vw,2.5rem);position:relative;overflow:hidden;
+    transition:border-color .3s var(--ease);will-change:transform}
+  .tile:hover{border-color:var(--line-strong)}
+  .t-a{grid-column:span 4;grid-row:span 2}
+  .t-b{grid-column:span 2;grid-row:span 2}
+  .t-c{grid-column:span 3}
+  .t-d{grid-column:span 3}
+  @media(max-width:900px){.bento{grid-template-columns:repeat(2,1fr)}
+    .t-a,.t-b,.t-c,.t-d{grid-column:span 2;grid-row:auto}}
+  @media(max-width:560px){.bento{grid-template-columns:1fr}
+    .t-a,.t-b,.t-c,.t-d{grid-column:span 1}}
 
-  .gal-note{max-width:640px;margin:0 auto 30px;text-align:center;font-size:.85rem;color:var(--muted);font-style:italic}
-  .gal-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;max-width:860px;margin:auto}
-  .gal-item{position:relative;aspect-ratio:3/4;border-radius:14px;overflow:hidden;display:flex;align-items:flex-end;
-    background:radial-gradient(240px 160px at 30% 20%, rgba(200,162,78,.25), transparent 65%),
-      linear-gradient(155deg,var(--emerald) 0%,var(--emerald-dark) 85%);border:1px solid rgba(200,162,78,.5)}
-  .gal-item .cap{width:100%;padding:14px;color:var(--champagne-soft);font-size:.8rem;letter-spacing:.06em;
-    background:linear-gradient(0deg,rgba(10,28,21,.85),transparent)}
-  .gal-item .ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
-    color:rgba(234,221,184,.4);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase}
-  .gal-item.wide{grid-column:span 2;aspect-ratio:16/9}
+  .tile .icon{width:46px;height:46px;border-radius:13px;display:grid;place-items:center;
+    background:rgba(255,255,255,.04);border:1px solid var(--line);font-size:1.25rem;
+    color:var(--ink);margin-bottom:1.1rem}
+  .tile h3{font-size:var(--step-1);letter-spacing:-.015em;font-weight:700}
+  .tile p{color:var(--ink-soft);margin-top:.5rem;font-size:var(--step--1)}
+  .stat{font-size:var(--step-3);font-weight:800;letter-spacing:-.03em;line-height:1}
+  .stat-sub{color:var(--ink-faint);font-size:var(--step--1);margin-top:.6rem}
+  .media{aspect-ratio:16/7;border-radius:14px;margin-bottom:1.4rem;overflow:hidden;
+    border:1px solid var(--line);
+    background:linear-gradient(135deg,#18181b,#09090b);display:grid;place-items:center;
+    color:var(--ink-faint);font-size:.85rem;text-align:center;padding:1rem}
+  .media.ratio-wide{aspect-ratio:16/9;margin-bottom:0}
+  .tile-b .media{aspect-ratio:4/5;margin:0 0 1.2rem}
 
-  #why-us{background:linear-gradient(160deg,var(--emerald),var(--emerald-dark));color:#fff}
-  #why-us .sec-head h2,#why-us .sec-head .eyebrow{color:var(--champagne-soft)}
-  .why-grid{display:grid;gap:16px;grid-template-columns:1fr;max-width:860px;margin:auto}
-  .why{display:flex;gap:16px;align-items:flex-start;background:rgba(255,255,255,.06);border:1px solid rgba(200,162,78,.35);border-radius:14px;padding:20px 22px}
-  .why .n{font-family:'Marcellus',serif;color:var(--champagne-soft);font-size:1.5rem;line-height:1;min-width:34px}
-  .why h3{font-size:1.02rem;color:#fff;margin-bottom:4px;font-family:'Manrope',sans-serif;font-weight:500}
-  .why p{font-size:.88rem;color:rgba(255,255,255,.78);font-weight:300}
+  /* ============ GALLERY ============ */
+  .gallery{display:grid;gap:1rem;grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}
+  .ph{aspect-ratio:4/5;border-radius:var(--radius);border:1px solid var(--line);
+    background:linear-gradient(135deg,#141416,#0c0c0e);display:grid;place-items:center;
+    color:var(--ink-faint);font-size:.85rem;text-align:center;padding:1rem;
+    transition:transform .35s var(--ease),border-color .35s var(--ease)}
+  .ph:hover{transform:scale(1.03);border-color:var(--line-strong)}
 
-  .loc-card{background:#fff;border:1px solid #e4ddc9;border-radius:16px;padding:26px 28px;max-width:860px;margin:auto}
-  .loc-card h3{color:var(--emerald);margin-bottom:10px;font-size:1.1rem}
-  .loc-card p{color:#3c463a;font-weight:300;font-size:.95rem}
-  .loc-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}
-  .btn-map{background:var(--emerald);color:#fff}
-  .btn-call{background:#fff;color:var(--emerald);border:1.5px solid var(--emerald)}
-  .btn-call:hover{background:var(--ivory)}
+  /* ============ CONTACT ============ */
+  .contact-card{background:linear-gradient(135deg,rgba(255,255,255,.07),rgba(255,255,255,.02));
+    border:1px solid var(--line-strong);border-radius:calc(var(--radius)*1.3);
+    backdrop-filter:blur(18px);padding:clamp(2rem,5vw,3.5rem);text-align:center}
+  .contact-card h2{font-size:var(--step-2);letter-spacing:-.02em;margin-bottom:.6rem}
+  .contact-card p{color:var(--ink-soft);margin-bottom:1.6rem}
 
-  .contact-wrap{max-width:720px;margin:auto;text-align:center}
-  .contact-wrap p.lead{color:var(--muted);font-weight:300;max-width:540px;margin:0 auto 30px}
-  .contact-actions{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:26px}
-  .contact-meta{font-size:.9rem;color:var(--muted)}
-  .contact-meta strong{color:var(--emerald)}
+  /* ============ FOOTER ============ */
+  footer.site{border-top:1px solid var(--line);padding:2.5rem 0 3rem;text-align:center;
+    color:var(--ink-faint);font-size:.82rem}
+  footer.site .disclaimer{margin-top:.8rem;font-size:.72rem;opacity:.75;max-width:62ch;margin-inline:auto}
 
-  footer{background:var(--emerald-dark);color:rgba(255,255,255,.7);text-align:center;padding:34px 22px 110px;font-size:.82rem;font-weight:300}
-  footer .fbrand{font-family:'Marcellus',serif;color:var(--champagne-soft);font-size:1.15rem;margin-bottom:6px}
-  footer .demo-note{margin-top:10px;font-size:.7rem;letter-spacing:.08em;color:rgba(255,255,255,.45)}
+  /* ============ MOTION SAFETY ============ */
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation:none!important;transition:none!important}
+    html{scroll-behavior:auto}
+    [data-reveal]{opacity:1!important;filter:none!important;transform:none!important}
+  }
+</style>
 
-  .mobile-bar{position:fixed;bottom:0;left:0;right:0;z-index:1000;display:flex;gap:10px;
-    padding:12px 16px calc(12px + env(safe-area-inset-bottom));background:rgba(255,255,255,.97);
-    backdrop-filter:blur(10px);border-top:1px solid #e4ddc9;box-shadow:0 -6px 20px rgba(18,53,40,.08)}
-  .mobile-bar .btn{flex:1;padding:14px 10px}
-
-  @media(min-width:640px){.svc-grid{grid-template-columns:repeat(2,1fr)}.why-grid{grid-template-columns:1fr 1fr}}
-  @media(min-width:900px){.svc-grid{grid-template-columns:repeat(3,1fr)}.gal-grid{grid-template-columns:repeat(3,1fr)}section{padding:86px 22px}footer{padding-bottom:40px}.mobile-bar{display:none}}
+<style>:root{--brand:#7c3aed;--brand-dark:#4c1d95;--accent:#eab308;}
+  .hero .kicker{background:#4c1d9526;color:#eab308;}
+  .tile .icon{background:#4c1d9533;color:#eab308;}
+  .stat{color:#eab308;}
 </style>
 </head>
 <body>
-<div class="demo-ribbon">Demo</div>
 
-<header>
-  <nav class="nav">
-    <div class="brand">
-      <span class="name">Haritha Designer Studio</span>
-      <span class="tag">Custom Couture · Worldwide</span>
-    </div>
-    <div class="nav-cta">
-      <a class="btn btn-wa btn-sm" href="https://wa.me/919493801050?text=Hi%20Haritha%20Designer%20Studio%2C%20I%20saw%20your%20website%20and%20I%27m%20interested%20in%20a%20custom%20outfit." target="_blank" rel="noopener">
-        <svg class="wa-ico" viewBox="0 0 24 24"><path d="M12.04 2a9.9 9.9 0 0 0-8.5 14.96L2 22l5.18-1.5A9.9 9.9 0 1 0 12.04 2Zm5.8 14.03c-.25.7-1.44 1.33-1.99 1.38-.55.06-1.07.25-3.6-.75-3.05-1.2-4.98-4.35-5.13-4.55-.15-.2-1.22-1.63-1.22-3.1 0-1.48.77-2.2 1.04-2.5.28-.3.6-.38.8-.38h.58c.18 0 .43-.07.67.51.25.6.85 2.07.92 2.22.08.15.13.33.03.53-.1.2-.15.33-.3.5-.15.18-.31.4-.45.53-.15.15-.3.31-.13.61.18.3.79 1.3 1.69 2.1 1.16 1.03 2.14 1.35 2.44 1.5.3.15.48.13.65-.08.18-.2.75-.87.95-1.17.2-.3.4-.25.67-.15.28.1 1.75.83 2.05.98.3.15.5.22.58.35.07.13.07.75-.18 1.46Z"/></svg>
-        WhatsApp
-      </a>
-    </div>
-  </nav>
+<div class="demo-ribbon">⚠ Demo preview — not the official website</div>
+
+<header class="site">
+  <div class="wrap nav">
+    <a class="brand" href="#top">Haritha Designer Studio</a>
+    <a class="btn" href="#contact">Book Now</a>
+  </div>
 </header>
 
-<section class="hero" id="home">
-  <span class="kicker">Bridal · Festive · Family Ensembles</span>
-  <h1>Couture made <em>for your moment</em></h1>
-  <p class="sub">Customised designer wear for men, women and kids — bridal outfits, festive ensembles and family edits, designed with you and stitched to perfection.</p>
-  <div class="ship">🌍 <strong>Worldwide shipping</strong> · Order &amp; appointments on WhatsApp</div>
-  <div class="hero-actions">
-    <a class="btn btn-wa" href="https://wa.me/919493801050?text=Hi%20Haritha%20Designer%20Studio%2C%20I%20saw%20your%20website%20and%20I%27m%20interested%20in%20a%20custom%20outfit." target="_blank" rel="noopener">
-      <svg class="wa-ico" viewBox="0 0 24 24"><path d="M12.04 2a9.9 9.9 0 0 0-8.5 14.96L2 22l5.18-1.5A9.9 9.9 0 1 0 12.04 2Zm5.8 14.03c-.25.7-1.44 1.33-1.99 1.38-.55.06-1.07.25-3.6-.75-3.05-1.2-4.98-4.35-5.13-4.55-.15-.2-1.22-1.63-1.22-3.1 0-1.48.77-2.2 1.04-2.5.28-.3.6-.38.8-.38h.58c.18 0 .43-.07.67.51.25.6.85 2.07.92 2.22.08.15.13.33.03.53-.1.2-.15.33-.3.5-.15.18-.31.4-.45.53-.15.15-.3.31-.13.61.18.3.79 1.3 1.69 2.1 1.16 1.03 2.14 1.35 2.44 1.5.3.15.48.13.65-.08.18-.2.75-.87.95-1.17.2-.3.4-.25.67-.15.28.1 1.75.83 2.05.98.3.15.5.22.58.35.07.13.07.75-.18 1.46Z"/></svg>
-      Book on WhatsApp
-    </a>
-    <a class="btn btn-outline" href="#services">Explore the studio</a>
-  </div>
-</section>
-
-<section id="about">
-  <div class="container">
-    <div class="sec-head">
-      <span class="eyebrow">About the Studio</span>
-      <h2>Design that balances tradition &amp; today</h2>
-      <div class="divider"></div>
-    </div>
-    <div class="about-card">
-      <p>Haritha Designer Studio creates <strong>customised couture</strong> — bridal kurta sets, half sarees, festive lehengas, family ensembles and kidswear — balancing contemporary design with traditional craft.</p>
-      <p>Customers across India and abroad order with us by sharing their design references on <strong>WhatsApp</strong> — from bridal outfits to dhoti ceremony wear — and we stitch to their measurements and ship worldwide. Every outfit is designed with the client, one at a time.</p>
-      <div class="about-flags">
-        <div class="flag"><div class="big">🌍</div><div class="lbl">Worldwide shipping</div></div>
-        <div class="flag"><div class="big">👩‍👧‍👦</div><div class="lbl">Men · Women · Kids</div></div>
-        <div class="flag"><div class="big">📐</div><div class="lbl">Fully customised</div></div>
+<main id="top">
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap">
+      <span class="kicker" data-hero-stagger>Hyderabad, Hyderabad</span>
+      <h1 data-hero-stagger>Haritha Designer Studio<br><em>— experience it online</em></h1>
+      <p class="lead" data-hero-stagger>Everything about Haritha Designer Studio in one premium place — browse, choose, and book directly on WhatsApp in seconds.</p>
+      <div class="cta-row" data-hero-stagger>
+        <a class="btn wa" href="https://wa.me/919493801050?text=Namaste!%20I%20saw%20Haritha%20Designer%20Studio%20online%20and%20want%20a%20consultation."
+           aria-label="Chat with Haritha Designer Studio on WhatsApp">💬 WhatsApp Us</a>
+        <a class="btn ghost" href="#services">Explore Services</a>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<section id="services">
-  <div class="container">
-    <div class="sec-head">
-      <span class="eyebrow">What We Create</span>
-      <h2>The studio's work</h2>
-      <div class="divider"></div>
+  <!-- BENTO FEATURES -->
+  <section id="services">
+    <div class="wrap">
+      <h2 class="sec" data-reveal="0">Why customers choose Haritha Designer Studio</h2>
+      <p class="sec-sub" data-reveal="0.05">Replace with the business's real strengths — verified public info only. Asymmetric Bento Grid, glassmorphic tiles, micro-borders.</p>
+      <div class="bento">
+        <article class="tile t-a" data-reveal="0" data-tilt>
+          <div class="media">Owner's real photo goes here (16:7)</div>
+          <h3>Bridal Couture</h3>
+          <p>Bridal outfits designed with you, stitched to your measurements for your big day.</p>
+          <a class="btn" style="margin-top:1.6rem" href="#contact">Begin your couture journey</a>
+        </article>
+        <article class="tile tile-b t-b" data-reveal="0.08" data-tilt>
+          <div class="media">Photo (4:5)</div>
+          <div class="stat">🌍</div>
+          <p class="stat-sub">Worldwide delivery — order from India or abroad with the same care.</p>
+        </article>
+        <article class="tile t-c" data-reveal="0" data-tilt>
+          <div class="icon">💃</div>
+          <h3>Half Saree Ceremony</h3>
+          <p>Half saree function ensembles — a ceremony dress code we know inside out.</p>
+        </article>
+        <article class="tile t-d" data-reveal="0" data-tilt>
+          <div class="icon">👨‍👩‍👧</div>
+          <h3>Whole family, one studio</h3>
+          <p>Men, women and kids — coordinate the entire family's occasion wear in one place.</p>
+        </article>
+      </div>
     </div>
-    <div class="svc-grid">
-      <div class="svc"><div class="ico">👰</div><h3>Bridal Couture</h3><p>Bridal outfits designed with you, stitched to your measurements for your big day.</p></div>
-      <div class="svc"><div class="ico">🥻</div><h3>Half Saree Ceremony</h3><p>Half saree function ensembles — a ceremony dress code we know inside out.</p></div>
-      <div class="svc"><div class="ico">✨</div><h3>Festive &amp; Family Edits</h3><p>Coordinated family ensembles for weddings, festivals and photo-worthy moments.</p></div>
-      <div class="svc"><div class="ico">👔</div><h3>Men's Occasion Wear</h3><p>Bridal kurta sets and dhoti ceremony wear, designed in the traditional way.</p></div>
-      <div class="svc"><div class="ico">🧒</div><h3>Kids' Custom Wear</h3><p>Custom outfits for the little members of the family, matching the occasion.</p></div>
-      <div class="svc"><div class="ico">💬</div><h3>WhatsApp Consultations</h3><p>Share references, book store appointments and order from anywhere in the world.</p></div>
-    </div>
-  </div>
-</section>
+  </section>
 
-<section id="gallery">
-  <div class="container">
-    <div class="sec-head">
-      <span class="eyebrow">Portfolio</span>
-      <h2>Signature pieces</h2>
-      <div class="divider"></div>
+  <!-- GALLERY -->
+  <section id="gallery" style="border-block:1px solid var(--line);background:#0c0c0e">
+    <div class="wrap">
+      <h2 class="sec" data-reveal="0">Gallery</h2>
+      <p class="sec-sub" data-reveal="0.05">Owner's real photos go here after approval — placeholders until then.</p>
+      <div class="gallery">
+        <div class="ph" data-reveal="0.00" data-tilt>Bridal Couture<br>(from owner)</div>
+        <div class="ph" data-reveal="0.06" data-tilt>Half Sarees<br>(from owner)</div>
+        <div class="ph" data-reveal="0.12" data-tilt>Family Edits<br>(from owner)</div>
+        <div class="ph" data-reveal="0.18" data-tilt>Kids' Custom Wear<br>(from owner)</div>
+      </div>
     </div>
-    <p class="gal-note">Demo placeholder frames — the final site will feature real photos of Haritha Designer Studio's own creations (shared with approval).</p>
-    <div class="gal-grid">
-      <div class="gal-item"><span class="ph">Photo placeholder</span><div class="cap">Bridal ensemble</div></div>
-      <div class="gal-item"><span class="ph">Photo placeholder</span><div class="cap">Half saree ceremony set</div></div>
-      <div class="gal-item"><span class="ph">Photo placeholder</span><div class="cap">Family ensemble edit</div></div>
-      <div class="gal-item wide"><span class="ph">Photo placeholder</span><div class="cap">Signature bridal look</div></div>
-      <div class="gal-item"><span class="ph">Photo placeholder</span><div class="cap">Men's occasion wear</div></div>
-    </div>
-  </div>
-</section>
+  </section>
 
-<section id="why-us">
-  <div class="container">
-    <div class="sec-head">
-      <span class="eyebrow">Why Choose Us</span>
-      <h2>Why clients order from anywhere</h2>
-      <div class="divider"></div>
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="wrap">
+      <div class="contact-card" data-reveal="0" data-tilt>
+        <h2>Visit or message us</h2>
+        <p>Haritha Designer Studio · Hyderabad, Hyderabad</p>
+        <a class="btn wa" href="https://wa.me/919493801050" aria-label="Open WhatsApp chat with Haritha Designer Studio">💬 Chat on WhatsApp</a>
+      </div>
     </div>
-    <div class="why-grid">
-      <div class="why"><span class="n">01</span><div><h3>Designed with you</h3><p>Every outfit starts with your reference and your measurements — nothing off the rack.</p></div></div>
-      <div class="why"><span class="n">02</span><div><h3>Worldwide delivery</h3><p>We ship internationally — order from India or abroad with the same care.</p></div></div>
-      <div class="why"><span class="n">03</span><div><h3>Whole family, one studio</h3><p>Men, women and kids — coordinate the entire family's occasion wear in one place.</p></div></div>
-      <div class="why"><span class="n">04</span><div><h3>Personal WhatsApp service</h3><p>Direct line to the studio — references, appointments and order updates on chat.</p></div></div>
-    </div>
-  </div>
-</section>
+  </section>
+</main>
 
-<section id="contact">
-  <div class="container contact-wrap">
-    <div class="sec-head">
-      <span class="eyebrow">Get In Touch</span>
-      <h2>Begin your couture journey</h2>
-      <div class="divider"></div>
-    </div>
-    <p class="lead">WhatsApp us your occasion date and design references — we'll take it from sketch to shipping.</p>
-    <div class="contact-actions">
-      <a class="btn btn-wa" href="https://wa.me/919493801050?text=Hi%20Haritha%20Designer%20Studio%2C%20I%20have%20an%20occasion%20coming%20up%20and%20would%20like%20to%20discuss%20an%20outfit." target="_blank" rel="noopener">
-        <svg class="wa-ico" viewBox="0 0 24 24"><path d="M12.04 2a9.9 9.9 0 0 0-8.5 14.96L2 22l5.18-1.5A9.9 9.9 0 1 0 12.04 2Zm5.8 14.03c-.25.7-1.44 1.33-1.99 1.38-.55.06-1.07.25-3.6-.75-3.05-1.2-4.98-4.35-5.13-4.55-.15-.2-1.22-1.63-1.22-3.1 0-1.48.77-2.2 1.04-2.5.28-.3.6-.38.8-.38h.58c.18 0 .43-.07.67.51.25.6.85 2.07.92 2.22.08.15.13.33.03.53-.1.2-.15.33-.3.5-.15.18-.31.4-.45.53-.15.15-.3.31-.13.61.18.3.79 1.3 1.69 2.1 1.16 1.03 2.14 1.35 2.44 1.5.3.15.48.13.65-.08.18-.2.75-.87.95-1.17.2-.3.4-.25.67-.15.28.1 1.75.83 2.05.98.3.15.5.22.58.35.07.13.07.75-.18 1.46Z"/></svg>
-        Chat on WhatsApp
-      </a>
-      <a class="btn btn-gold" href="tel:+919493801050">Call 94938 01050</a>
-    </div>
-    <p class="contact-meta"><strong>Haritha Designer Studio</strong> · Hyderabad · Worldwide shipping</p>
+<footer class="site">
+  <div class="wrap">
+    <p>© 2026-09-18 Haritha Designer Studio · Hyderabad, Hyderabad</p>
+    <p class="disclaimer">This is a design demo created by Gowtham (web designer, Hyderabad) for preview purposes only. Not the official website. Business details shown are from public listings; photos are placeholders until the owner approves.</p>
   </div>
-</section>
-
-<footer>
-  <div class="fbrand">Haritha Designer Studio</div>
-  <div>Custom couture · Hyderabad, India · Shipping worldwide</div>
-  <div>+91 94938 01050</div>
-  <div class="demo-note">⚠ DEMO WEBSITE — created for presentation purposes only. Not the official website of Haritha Designer Studio.</div>
 </footer>
-
-<div class="mobile-bar">
-  <a class="btn btn-call" href="tel:+919493801050">📞 Call</a>
-  <a class="btn btn-wa" href="https://wa.me/919493801050?text=Hi%20Haritha%20Designer%20Studio%2C%20I%20saw%20your%20website%20and%20I%27m%20interested%20in%20a%20custom%20outfit." target="_blank" rel="noopener">
-    <svg class="wa-ico" viewBox="0 0 24 24"><path d="M12.04 2a9.9 9.9 0 0 0-8.5 14.96L2 22l5.18-1.5A9.9 9.9 0 1 0 12.04 2Zm5.8 14.03c-.25.7-1.44 1.33-1.99 1.38-.55.06-1.07.25-3.6-.75-3.05-1.2-4.98-4.35-5.13-4.55-.15-.2-1.22-1.63-1.22-3.1 0-1.48.77-2.2 1.04-2.5.28-.3.6-.38.8-.38h.58c.18 0 .43-.07.67.51.25.6.85 2.07.92 2.22.08.15.13.33.03.53-.1.2-.15.33-.3.5-.15.18-.31.4-.45.53-.15.15-.3.31-.13.61.18.3.79 1.3 1.69 2.1 1.16 1.03 2.14 1.35 2.44 1.5.3.15.48.13.65-.08.18-.2.75-.87.95-1.17.2-.3.4-.25.67-.15.28.1 1.75.83 2.05.98.3.15.5.22.58.35.07.13.07.75-.18 1.46Z"/></svg>
-    WhatsApp Order
-  </a>
-</div>
 
 </body>
 </html>
